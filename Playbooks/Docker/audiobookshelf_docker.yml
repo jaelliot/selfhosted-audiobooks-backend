@@ -1,0 +1,32 @@
+---
+- name: Install Audiobookshelf with Docker
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install Docker and Docker Compose
+    include_role:
+      name: geerlingguy.docker
+    
+  - name: Create a directory for Audiobookshelf configuration
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+    with_items:
+      - /path/to/your/audiobookshelf/config
+      - /path/to/your/audiobookshelf/metadata
+
+  - name: Deploy Audiobookshelf using Docker Compose
+    docker_compose:
+      project_src: /path/to/your/docker-compose-directory
+      state: present
+
+  - name: Create README file
+    copy:
+      dest: "/vagrant/README.txt"
+      content: |
+        Audiobookshelf Documentation: https://www.audiobookshelf.org/docs/
+        GitHub Repository: https://github.com/advplyr/audiobookshelf
+        Basic Usage: [Include Basic Usage Instructions Here]

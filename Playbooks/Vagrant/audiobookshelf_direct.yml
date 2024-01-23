@@ -1,0 +1,29 @@
+---
+- name: Install Audiobookshelf directly on Ubuntu 22.04
+  hosts: all
+  become: yes
+  tasks:
+  - name: Add Audiobookshelf repository
+    ansible.builtin.apt_repository:
+      repo: 'deb [trusted=yes] http://repo.audiobookshelf.org/any/ audiobookshelf main'
+      state: present
+
+  - name: Install Audiobookshelf
+    apt:
+      name: audiobookshelf
+      state: latest
+      update_cache: yes
+
+  - name: Ensure Audiobookshelf is enabled and running
+    ansible.builtin.systemd:
+      name: audiobookshelf
+      enabled: yes
+      state: started
+
+  - name: Create README file
+    copy:
+      dest: "/vagrant/README.txt"
+      content: |
+        Audiobookshelf Documentation: https://www.audiobookshelf.org/docs/
+        GitHub Repository: https://github.com/advplyr/audiobookshelf
+        Basic Usage: [Include Basic Usage Instructions Here]
